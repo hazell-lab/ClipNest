@@ -1,0 +1,79 @@
+<Window x:Class="ClipNest.App.Views.CodePreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Code preview - ClipNest"
+        Width="880" Height="640" MinWidth="520" MinHeight="340"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Assets/ClipNest.ico"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}"
+        FontFamily="{StaticResource UiFont}" FontSize="13"
+        UseLayoutRounding="True">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- toolbar -->
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                <TextBlock x:Name="HeaderText" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="Read-only preview. Clipboard content is only displayed, never run." FontSize="11.5"
+                           Foreground="{DynamicResource TextTertiaryBrush}" />
+            </StackPanel>
+            <ComboBox x:Name="LanguageBox" Grid.Column="1" Width="230" Style="{StaticResource ThemedComboBox}"
+                      DisplayMemberPath="Name" SelectionChanged="OnLanguageChanged"
+                      AutomationProperties.Name="Language for coloring" ToolTip="Language used for coloring" />
+            <CheckBox x:Name="WrapToggle" Grid.Column="2" Style="{StaticResource ToggleSwitch}" Content="Wrap"
+                      Margin="16,0,0,0" Checked="OnWrapChanged" Unchecked="OnWrapChanged"
+                      AutomationProperties.Name="Wrap long lines" />
+            <Button x:Name="CopyButton" Grid.Column="3" Style="{StaticResource PrimaryButton}" Margin="16,0,0,0"
+                    Click="OnCopy" AutomationProperties.Name="Copy to clipboard">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE8C8;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,7,0" />
+                    <TextBlock Text="Copy" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <Border x:Name="TruncatedNotice" Grid.Row="1" Background="{DynamicResource InfoBackgroundBrush}" CornerRadius="8"
+                Padding="10,7" Margin="0,0,0,10" Visibility="Collapsed">
+            <TextBlock x:Name="TruncatedText" Foreground="{DynamicResource InfoForegroundBrush}" FontSize="12" TextWrapping="Wrap" />
+        </Border>
+
+        <!-- code -->
+        <Border Grid.Row="2" Background="{DynamicResource CodeBackgroundBrush}" CornerRadius="8"
+                BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1">
+            <ScrollViewer x:Name="CodeScroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="LineNumbers" FontFamily="{StaticResource CodeFont}" FontSize="13"
+                               LineHeight="19" LineStackingStrategy="BlockLineHeight" TextAlignment="Right"
+                               Foreground="{DynamicResource CodeLineNumberBrush}" Margin="12,10,14,10"
+                               AutomationProperties.Name="Line numbers" />
+                    <RichTextBox x:Name="CodeView" Grid.Column="1" IsReadOnly="True" IsReadOnlyCaretVisible="False"
+                                 Background="Transparent" BorderThickness="0" Padding="0" Margin="0,10,12,10"
+                                 Foreground="{DynamicResource TextPrimaryBrush}" SelectionBrush="{DynamicResource AccentBrush}"
+                                 VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled"
+                                 AutomationProperties.Name="Code" />
+                </Grid>
+            </ScrollViewer>
+        </Border>
+
+        <TextBlock x:Name="StatusText" Grid.Row="3" Margin="2,10,0,0" FontSize="12"
+                   Foreground="{DynamicResource TextSecondaryBrush}" />
+    </Grid>
+</Window>

@@ -1,0 +1,43 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- dark theme colors. controls refer to these keys with dynamic resources -->
+    <Color x:Key="ShadowColor">#000000</Color>
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#17181D" />
+    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="#1C1D23" />
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="#30323C" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#25262E" />
+    <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#2D2F38" />
+    <SolidColorBrush x:Key="SurfacePressedBrush" Color="#363946" />
+    <SolidColorBrush x:Key="SelectionBrush" Color="#2A3552" />
+    <SolidColorBrush x:Key="SelectionBorderBrush" Color="#6C8CFF" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#7C9CFF" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#94AEFF" />
+    <SolidColorBrush x:Key="AccentForegroundBrush" Color="#0E1020" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#ECEDF2" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#A8ABB8" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="#7A7E8C" />
+    <SolidColorBrush x:Key="DividerBrush" Color="#2A2C35" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#FF7A8A" />
+    <SolidColorBrush x:Key="DangerHoverBrush" Color="#FF97A4" />
+    <SolidColorBrush x:Key="WarningBackgroundBrush" Color="#3A3222" />
+    <SolidColorBrush x:Key="WarningForegroundBrush" Color="#F2C66D" />
+    <SolidColorBrush x:Key="InfoBackgroundBrush" Color="#1F2A44" />
+    <SolidColorBrush x:Key="InfoForegroundBrush" Color="#B9C8FF" />
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#3E414D" />
+    <SolidColorBrush x:Key="ScrollThumbHoverBrush" Color="#575B69" />
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#22232A" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="#34363F" />
+    <SolidColorBrush x:Key="ThumbnailBackgroundBrush" Color="#121318" />
+    <SolidColorBrush x:Key="CodeBackgroundBrush" Color="#141519" />
+    <SolidColorBrush x:Key="CodeLineNumberBrush" Color="#5D6170" />
+    <SolidColorBrush x:Key="CodeKeywordBrush" Color="#C59BFF" />
+    <SolidColorBrush x:Key="CodeTypeBrush" Color="#6FD3E8" />
+    <SolidColorBrush x:Key="CodeStringBrush" Color="#A5D88A" />
+    <SolidColorBrush x:Key="CodeCommentBrush" Color="#737A8C" />
+    <SolidColorBrush x:Key="CodeNumberBrush" Color="#F7A76C" />
+    <SolidColorBrush x:Key="CodePreprocessorBrush" Color="#F78C9F" />
+    <SolidColorBrush x:Key="CodeTagBrush" Color="#7AB8FF" />
+    <SolidColorBrush x:Key="CodeAttributeBrush" Color="#E5C07B" />
+    <SolidColorBrush x:Key="CodePropertyBrush" Color="#8FC7FF" />
+    <SolidColorBrush x:Key="CodeVariableBrush" Color="#FF9E7A" />
+</ResourceDictionary>

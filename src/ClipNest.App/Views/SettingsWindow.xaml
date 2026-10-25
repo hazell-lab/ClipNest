@@ -1,0 +1,198 @@
+<Window x:Class="ClipNest.App.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ClipNest settings"
+        Width="660" Height="780" MinWidth="520" MinHeight="480"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Assets/ClipNest.ico"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}"
+        FontFamily="{StaticResource UiFont}" FontSize="13"
+        UseLayoutRounding="True">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Padding="22,20,22,8">
+            <StackPanel>
+                <TextBlock Text="Settings" FontSize="22" FontWeight="SemiBold" Margin="2,0,0,16" />
+
+                <!-- shortcut, startup and theme -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Shortcut and appearance" Style="{StaticResource CardTitle}" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Open clipboard history" Style="{StaticResource FieldLabel}" />
+                            <TextBox x:Name="HotkeyBox" Grid.Column="1" Width="190" Style="{StaticResource InputBox}"
+                                     Text="{Binding HotkeyText, Mode=OneWay}" IsReadOnly="True" IsReadOnlyCaretVisible="False"
+                                     PreviewKeyDown="OnHotkeyKeyDown" GotKeyboardFocus="OnHotkeyFocus" LostKeyboardFocus="OnHotkeyBlur"
+                                     AutomationProperties.Name="Shortcut to open clipboard history. Focus this box and press a new shortcut." />
+                            <Button Grid.Column="2" Style="{StaticResource SecondaryButton}" Content="Reset" Margin="8,0,0,0"
+                                    Click="OnResetHotkey" AutomationProperties.Name="Reset shortcut to Ctrl+Shift+V" />
+                        </Grid>
+                        <TextBlock Style="{StaticResource HintText}"
+                                   Text="Click the box and press a new shortcut. Use Ctrl, Alt or Win with a letter, number, F-key or arrow key. Some apps use Ctrl+Shift+V for 'paste as plain text', so pick another shortcut if you need that." />
+                        <TextBlock Text="{Binding HotkeyStatus}" Margin="0,6,0,0" TextWrapping="Wrap" FontSize="12"
+                                   Visibility="{Binding HasHotkeyStatus, Converter={StaticResource BoolToVisibility}}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HotkeyStatusIsError}" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <CheckBox Style="{StaticResource ToggleSwitch}" Margin="0,16,0,0"
+                                  Content="Start ClipNest when I sign in to Windows"
+                                  IsChecked="{Binding LaunchAtStartup}" />
+
+                        <Grid Margin="0,14,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Theme" Style="{StaticResource FieldLabel}" />
+                            <ComboBox Grid.Column="1" Width="190" Style="{StaticResource ThemedComboBox}"
+                                      ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}" DisplayMemberPath="Name"
+                                      AutomationProperties.Name="Theme" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- capture and privacy -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Capture and privacy" Style="{StaticResource CardTitle}" />
+                        <CheckBox Style="{StaticResource ToggleSwitch}" Content="Save new copies (capture is on)"
+                                  IsChecked="{Binding CaptureEnabled}" />
+                        <CheckBox Style="{StaticResource ToggleSwitch}" Margin="0,12,0,0" Content="Save copied images"
+                                  IsChecked="{Binding CaptureImages}" />
+
+                        <Border Background="{DynamicResource InfoBackgroundBrush}" CornerRadius="8" Padding="12,10" Margin="0,14,0,0">
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource InfoForegroundBrush}"
+                                       Text="Everything you copy while capture is on is saved on this PC, unencrypted, in the folder shown below, until you delete it or it is cleaned up by the limits. Nothing is sent anywhere. Apps that mark copied data as private (many password managers do) are skipped. ClipNest cannot reliably recognise passwords or other sensitive text on its own, so pause capture when you copy something secret." />
+                        </Border>
+
+                        <TextBlock Text="Excluded apps" Style="{StaticResource FieldLabel}" Margin="0,16,0,0" />
+                        <TextBlock Style="{StaticResource HintText}"
+                                   Text="Copies made in these apps are not saved. This is best effort: Windows does not always report which app put something on the clipboard. Enter the program name, for example KeePass.exe." />
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border BorderBrush="{DynamicResource InputBorderBrush}" BorderThickness="1" CornerRadius="6"
+                                    Background="{DynamicResource InputBackgroundBrush}" Padding="2">
+                                <ListBox Height="112" Background="Transparent" BorderThickness="0"
+                                         ItemsSource="{Binding ExcludedApps}" SelectedItem="{Binding SelectedExcludedApp}"
+                                         ItemContainerStyle="{StaticResource SimpleItem}"
+                                         AutomationProperties.Name="Excluded apps" />
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0" Width="170">
+                                <TextBox Style="{StaticResource InputBox}" Text="{Binding NewExcludedApp, UpdateSourceTrigger=PropertyChanged}"
+                                         KeyDown="OnExcludedKeyDown" AutomationProperties.Name="App to exclude" />
+                                <Button Style="{StaticResource SecondaryButton}" Content="Add" Margin="0,8,0,0" Click="OnAddExcluded" />
+                                <Button Style="{StaticResource SecondaryButton}" Content="Remove selected" Margin="0,8,0,0" Click="OnRemoveExcluded" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- paste -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Paste" Style="{StaticResource CardTitle}" />
+                        <CheckBox Style="{StaticResource ToggleSwitch}" Content="Paste automatically after choosing an item"
+                                  IsChecked="{Binding AutoPaste}" />
+                        <TextBlock Style="{StaticResource HintText}"
+                                   Text="Off by default. When on, ClipNest switches back to the window you were using and presses Ctrl+V for you. Windows blocks this for apps running as administrator, and it only works when the panel was opened with the shortcut. If it fails, the item is still copied, so you can press Ctrl+V yourself. Text is always copied without formatting." />
+                    </StackPanel>
+                </Border>
+
+                <!-- history limits and storage -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="History and storage" Style="{StaticResource CardTitle}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Keep at most this many unpinned items" Style="{StaticResource FieldLabel}" />
+                            <TextBox Grid.Column="1" Width="110" Style="{StaticResource InputBox}"
+                                     Text="{Binding MaxHistoryItems, UpdateSourceTrigger=PropertyChanged}"
+                                     PreviewTextInput="OnNumberInput" AutomationProperties.Name="Maximum unpinned items" />
+                            <TextBlock Grid.Row="1" Text="Storage limit in MB" Style="{StaticResource FieldLabel}" Margin="0,10,0,0" />
+                            <TextBox Grid.Row="1" Grid.Column="1" Width="110" Margin="0,10,0,0" Style="{StaticResource InputBox}"
+                                     Text="{Binding MaxStorageMb, UpdateSourceTrigger=PropertyChanged}"
+                                     PreviewTextInput="OnNumberInput" AutomationProperties.Name="Storage limit in megabytes" />
+                            <TextBlock Grid.Row="2" Text="Delete unpinned items older than (days, 0 keeps them)" Style="{StaticResource FieldLabel}" Margin="0,10,0,0" />
+                            <TextBox Grid.Row="2" Grid.Column="1" Width="110" Margin="0,10,0,0" Style="{StaticResource InputBox}"
+                                     Text="{Binding RetentionDays, UpdateSourceTrigger=PropertyChanged}"
+                                     PreviewTextInput="OnNumberInput" AutomationProperties.Name="Retention in days" />
+                        </Grid>
+                        <TextBlock Style="{StaticResource HintText}"
+                                   Text="Pinned items are never removed by these limits. Changes apply as soon as you save." />
+
+                        <TextBlock Text="Used on this PC" Style="{StaticResource FieldLabel}" Margin="0,16,0,0" />
+                        <TextBlock Text="{Binding StorageText}" Style="{StaticResource HintText}" />
+
+                        <TextBlock Text="Data folder" Style="{StaticResource FieldLabel}" Margin="0,14,0,0" />
+                        <Grid Margin="0,6,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{StaticResource InputBox}" Text="{Binding DataFolder, Mode=OneWay}" IsReadOnly="True"
+                                     AutomationProperties.Name="Data folder path" />
+                            <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Content="Open folder" Margin="8,0,0,0"
+                                    Click="OnOpenFolder" />
+                        </Grid>
+                        <TextBlock Style="{StaticResource HintText}"
+                                   Text="history.db holds text and item details, the images folder holds pictures, settings.json holds these settings. To remove everything by hand, quit ClipNest from the tray and delete this folder." />
+
+                        <WrapPanel Margin="0,14,0,0">
+                            <Button Style="{StaticResource SecondaryButton}" Content="Clear unpinned history" Margin="0,0,8,0"
+                                    Click="OnClearHistory" />
+                            <Button Style="{StaticResource DangerButton}" Content="Delete all clipboard data…" Click="OnDeleteAll" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- bottom bar -->
+        <Border Grid.Row="1" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource DividerBrush}"
+                BorderThickness="0,1,0,0" Padding="22,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding SaveMessage}" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="12"
+                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,12,0" />
+                <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Content="Close" MinWidth="90" Click="OnClose" />
+                <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Content="Save" MinWidth="90" Margin="8,0,0,0" Click="OnSave" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
