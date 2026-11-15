@@ -242,31 +242,16 @@ text, the first 32,768 characters are searchable.
 
 ## Verification status
 
-What was checked when this project was produced, in a Linux build environment
-(no Windows machine was available):
+Checked on Windows 11 on 16 November 2026 with .NET SDK 10.0.402:
 
 | Check | Result |
 |---|---|
-| `ClipNest.Core` build (.NET SDK 10.0.113) | Passed, 0 warnings |
-| Core unit tests: 125 tests (duplicates, search and filters on both search paths, settings persistence and damaged files, retention and pinned preservation, image file cleanup, self-copy suppression, capture rules, bitmap headers, code coloring) | **125 passed, 0 failed** |
-| Bitmap conversion cross-checked with an independent decoder (Pillow) | Passed |
-| All `ClipNest.App` C# compiled against reference assemblies built from the official dotnet/wpf v10.0.13 sources | Passed, 0 errors, 0 warnings |
-| All 8 XAML files checked by a custom validator (element types, properties, attached properties, events and handlers, enum values, resource keys, template bindings, setter targets, binding paths; about 1,500 attributes) | Passed (the validator was confirmed to catch planted typos) |
-| Comment style audit (539 comments, all lowercase) | Passed |
+| `dotnet build -c Release` (whole solution, including the WPF app) | Passed, 0 warnings, 0 errors |
+| `dotnet test` with the real xUnit packages: 125 tests (duplicates, search and filters, settings persistence and damaged files, retention and pinned items, image cleanup, self-copy suppression, capture rules, bitmap headers, code coloring) | **125 passed, 0 failed** |
 
-Important caveats:
-
-- **NuGet was blocked in that environment**, so the tests ran against
-  Microsoft.Data.Sqlite compiled from its official v10.0.13 source with the
-  system SQLite (3.45.1), using a minimal runner for `[Fact]`/`[Theory]` with the
-  real xUnit assertion source. On Windows, `dotnet test` uses the real packages.
-- **The WPF app was not built by the real WPF build tools and was not run.**
-  Windows clipboard integration, the global hotkey, tray icon, auto-paste,
-  DPI/multi-monitor placement, visuals and packaging have **not** been tested on
-  Windows. Please run the build and test commands above first; if anything fails,
-  the error output will point to the file and line.
-- No prebuilt `.exe` is included, because Windows executables could not be built
-  in that environment. `scripts\package.ps1` creates one on Windows.
+The automated tests cover `ClipNest.Core`. Clipboard capture, the global hotkey,
+tray icon, auto-paste, multi-monitor placement and the look of the app are
+checked by using it, not by automated tests.
 
 ## Dependencies and versions
 
